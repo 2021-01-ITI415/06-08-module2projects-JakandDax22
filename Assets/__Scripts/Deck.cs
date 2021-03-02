@@ -150,7 +150,16 @@ public class Deck : MonoBehaviour {
 		
 		// list of all Cards
 		cards = new List<Card>();
-		
+
+
+		//WORK STARTS HERE
+		//Iterate through all of the card names that were just made
+		for(int i=0; i < cardNames.Count; i++)
+        {
+			//Make the card and add it to the deck
+			cards.Add(MakeCard(i));
+        }
+
 		// temp variables
 		Sprite tS = null;
 		GameObject tGO = null;
@@ -251,7 +260,87 @@ public class Deck : MonoBehaviour {
 			cards.Add (card);
 		} // for all the Cardnames	
 	} // makeCards
-	
+
+	private Card MakeCard(int cNum)
+    {
+		//Create a new Card GameObject
+		GameObject cgo = Instantiate(prefabCard) as GameObject;
+		//Set the transform.parent of the new card to the anchor
+		cgo.transform.parent = deckAnchor;
+		Card card = cgo.GetComponent<Card>(); //Get the card component
+
+		//This line stacks the cards so that they're all in nice rows
+		cgo.transform.localPosition = new Vector3((cNum % 13) * 3, cNum / 13 * 4, 0);
+
+		//Assign basic values to the card
+		card.name = cardNames[cNum];
+		card.suit = card.name[0].ToString();
+		card.rank = int.Parse(card.name.Substring(1));
+		if (card.suit == "D" || card.suit == "H")
+        {
+			card.colS = "Red";
+			card.color = Color.red;
+        }
+		//Pull CardDefinition for this card
+		card.def = GetCardDefinitionByRank(card.rank);
+
+		AddDecorators(card);
+		return card;
+    }
+
+	private Sprite _tSp = null;
+	private GameObject _tGO = null;
+	private SpriteRenderer _tSR = null;
+
+	private void AddDecorators(Card card)
+    {
+        //Add decorators
+        foreach (Decorator deco in decorators)
+        {
+			if (deco.type == "suit")
+            {
+				//Instantiate a Sprite Gameobject
+				_tGO = Instantiate(prefabSprite) as GameObject;
+				//Get the SpriteRenderer Compenent
+				_tSR = _tGO.GetComponent<SpriteRenderer>();
+				//Set the Sprite to the proper suit
+				_tSR.sprite = dictSuits[card.suit];
+            }
+            else
+            {
+				_tGO = Instantiate(prefabSprite) as GameObject;
+				_tSR = _tGO.GetComponent<SpriteRenderer>();
+				//Get the proper Sprite to show this rank
+				_tSp = rankSprites[card.rank];
+				//Assign this rank Sprite to the SpriteRenderer
+				_tSR.sprite = _tSp;
+				//Set the color of the rank to match the suit
+				_tSR.color = card.color;
+            }
+			//Make the deco Sprites render above the card
+			_tSR.sortingOrder = 1;
+			//Make the decorator Sprite a child of the card
+			_tGO.transform.SetParent(card.transform);
+			//Set the localPosition based on the location from DeckXML
+			_tGO.transform.localPosition = deco.loc;
+			//Flip the decorator if needed
+			if (deco.flip)
+            {
+				//An euler rotation of 180 around the z-axis will flip it
+				_tGO.transform.rotation = Quaternion.Euler(0, 0, 180);
+            }
+			//Set the scale to keep decos from being too big
+			if (deco.scale != 1)
+            {
+				_tGO.transform.localScale = Vector3.one * deco.scale;
+            }
+			//Name this GameObject so it is easy to see
+			_tGO.name = deco.type;
+			//Add this deco GameObject to the List card.decoGOs
+			card.decoGOs.Add(_tGO);
+        }
+    }
+
 	//Find the proper face card
 	public Sprite GetFace(string faceS) {
 		foreach (Sprite tS in faceSprites) {
