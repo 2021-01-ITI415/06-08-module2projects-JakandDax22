@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Deck : MonoBehaviour {
 
 [Header("Set in Inspector")]
+	public bool startFaceUp = false;
 	//Suits
 	public Sprite suitClub;
 	public Sprite suitDiamond;
@@ -35,6 +36,7 @@ public class Deck : MonoBehaviour {
 	public Transform					deckAnchor;
 	public Dictionary<string, Sprite>	dictSuits;
 
+	
 
 	// called by Prospector when it is ready
 	public void InitDeck(string deckXMLText) {
@@ -285,6 +287,9 @@ public class Deck : MonoBehaviour {
 		card.def = GetCardDefinitionByRank(card.rank);
 
 		AddDecorators(card);
+		AddPips(card);
+		AddFace(card);
+		AddBack(card);
 		return card;
     }
 
@@ -339,6 +344,74 @@ public class Deck : MonoBehaviour {
 			//Add this deco GameObject to the List card.decoGOs
 			card.decoGOs.Add(_tGO);
         }
+    }
+
+	private void AddPips(Card card)
+    {
+		//For each of the pips in the definition...
+		foreach(Decorator pip in card.def.pips)
+        {
+			//...Instantiate a Sprite GameObject
+			_tGO = Instantiate(prefabSprite) as GameObject;
+			//Set the parent to be the card GameObject
+			_tGO.transform.SetParent(card.transform);
+			//Set the position to that specified in the XML
+			_tGO.transform.localPosition = pip.loc;
+			//Flip it if necessary
+			if (pip.flip)
+            {
+				_tGO.transform.rotation = Quaternion.Euler(0, 0, 180);
+            }
+			//Scale it if necessary (only for the Ace)
+			if (pip.scale!=1)
+			{
+				_tGO.transform.localScale = Vector3.one * pip.scale;
+			}
+			//Give the GameObject a name
+			_tGO.name = "pip";
+			//Get the SpriteRenderer Component
+			_tSR = _tGO.GetComponent<SpriteRenderer>();
+			//Set the Sprite to the proper suit
+			_tSR.sprite = dictSuits[card.suit];
+			//Set sortingOrder so the pip is rendered above the card_front
+			_tSR.sortingOrder = 1;
+			//Add this to the card's list of pips
+			card.pipGOs.Add(_tGO);
+		}
+    }
+
+	private void AddFace(Card card)
+    {
+		if (card.def.face == "")
+        {
+			return; //No need to run if this isn't a face card
+        }
+		_tGO = Instantiate(prefabSprite) as GameObject;
+		_tSR = _tGO.GetComponent<SpriteRenderer>();
+		//Generate the right name and pass it to GetFace()
+		_tSp = GetFace(card.def.face + card.suit);
+		_tSR.sprite = _tSp; //Assign this sprite to _tSR
+		_tSR.sortingOrder = 1; //Set the sortingOrder
+		_tGO.transform.SetParent(card.transform);
+		_tGO.transform.localPosition = Vector3.zero;
+		_tGO.name = "face";
+    }
+
+	private void AddBack(Card card)
+    {
+		//Add card back
+		//The card back will be able to cover everything else on the card
+		_tGO = Instantiate(prefabSprite) as GameObject;
+		_tSR = _tGO.GetComponent<SpriteRenderer>();
+		_tSR.sprite = cardBack;
+		_tGO.transform.SetParent(card.transform);
+		_tGO.transform.localPosition = Vector3.zero;
+		//This is a higher sortingOrder than anything else
+		_tSR.sortingOrder = 2;
+		_tGO.name= "back";
+		card.back = _tGO;
+		//Default to face-up
+		card.faceUp = startFaceUp; //Use this property faceUp of Card
     }
 
 	//Find the proper face card
