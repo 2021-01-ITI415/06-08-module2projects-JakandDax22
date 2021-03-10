@@ -122,7 +122,7 @@ public class Prospector : MonoBehaviour {
         }
 
 		//Set up the initial target card
-		MoveToTarget(Draw());
+		MoveToTarget(Draw ());
 		//Set up the draw pile
 		UpdateDrawPile();
 	}
@@ -154,7 +154,7 @@ public class Prospector : MonoBehaviour {
                 //If either of the covering cards are in the tableau
                 if (cover.state == eCardState.tableau)
                 {
-					faceUp = false;
+					faceUp = false; //then this card is face-down
                 }
             }
 			cd.faceUp = faceUp; // Set the value on the card
