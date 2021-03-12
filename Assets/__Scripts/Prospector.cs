@@ -119,7 +119,7 @@ public class Prospector : MonoBehaviour {
 				cp = FindCardByLayoutID(hid);
 				tCP.hiddenBy.Add(cp);
 			}
-            if (Random.Range(0, 100)<=50)
+            if (Random.Range(0, 100)<=10)
             {
 				tCP.isGold = true;
 				tCP.GetComponent<SpriteRenderer>().sprite= Camera.main.GetComponent<Deck>().cardFrontGold;
