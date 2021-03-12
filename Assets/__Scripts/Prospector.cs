@@ -119,6 +119,13 @@ public class Prospector : MonoBehaviour {
 				cp = FindCardByLayoutID(hid);
 				tCP.hiddenBy.Add(cp);
 			}
+            if (Random.Range(0, 100)<=50)
+            {
+				tCP.isGold = true;
+				tCP.GetComponent<SpriteRenderer>().sprite= Camera.main.GetComponent<Deck>().cardFrontGold;
+				Transform tCardBack = tCP.transform.Find("back");
+				tCardBack.gameObject.GetComponent<SpriteRenderer>().sprite = Camera.main.GetComponent<Deck>().cardBackGold;
+            }
         }
 
 		//Set up the initial target card
@@ -246,6 +253,9 @@ public class Prospector : MonoBehaviour {
 			case eCardState.tableau:
 				//Clicking a card in the tableau will check if it's a valid play
 				bool validMatch = true;
+				bool goldClicked = false;
+				//Check to see if a gold card was clicked
+				
 				if (!cd.faceUp)
                 {
 					//If the card is face-down, it's not valid
@@ -258,12 +268,25 @@ public class Prospector : MonoBehaviour {
                 }
 				if (!validMatch) return; //return if not valid
 
-				//If we got here, then: Yay! It's a valid card.
+                //If we got here, then: Yay! It's a valid card.
+                if (cd.isGold == true)
+                {
+					goldClicked = true;
+                }
 				tableau.Remove(cd); //Remove it from the tableau list
 				MoveToTarget(cd); //Make it the target card
 				SetTableauFaces(); //Update tableau card face-ups
-				ScoreManager.EVENT(eScoreEvent.mine);
-				FloatingScoreHandler(eScoreEvent.mine);
+                if (goldClicked)
+                {
+					ScoreManager.EVENT(eScoreEvent.mineGold);
+					FloatingScoreHandler(eScoreEvent.mineGold);
+				}
+                else
+                {
+					ScoreManager.EVENT(eScoreEvent.mine);
+					FloatingScoreHandler(eScoreEvent.mine);
+				}
+				
 				break;
         }
 		//Check to see whether the game is over or not
@@ -417,7 +440,31 @@ public class Prospector : MonoBehaviour {
 					fs.reportFinishTo = fsRun.gameObject;
                 }
 				break;
-        }
+
+			case eScoreEvent.mineGold: //Remove a mine card
+								   //Create a FloatingScore for this score
+				//FloatingScore fs;
+				//Move it from the mousePosition to fsPosRun
+				p0 = Input.mousePosition;
+				p0.x /= Screen.width;
+				p0.y /= Screen.height;
+				fsPts = new List<Vector2>();
+				fsPts.Add(p0);
+				fsPts.Add(fsPosMid);
+				fsPts.Add(fsPosRun);
+				fs = Scoreboard.S.CreateFloatingScore(ScoreManager.SCORE_RUN, fsPts);
+				fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
+				if (fsRun == null)
+				{
+					fsRun = fs;
+					fsRun.reportFinishTo = null;
+				}
+				else
+				{
+					fs.reportFinishTo = fsRun.gameObject;
+				}
+				break;
+		}
     }
 
 	void SetUpUITexts()

@@ -156,11 +156,11 @@ public class Deck : MonoBehaviour {
 
 		//WORK STARTS HERE
 		//Iterate through all of the card names that were just made
-		for(int i=0; i < cardNames.Count; i++)
-        {
+		//for(int i=0; i < cardNames.Count; i++)
+        //{
 			//Make the card and add it to the deck
-			cards.Add(MakeCard(i));
-        }
+	//		cards.Add(MakeCard(i));
+      //  }
 
 		// temp variables
 		Sprite tS = null;

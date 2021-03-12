@@ -1,8 +1,22 @@
 fileFormatVersion: 2
 guid: 2b69c28581428da469438d7d5901b8ad
 MonoImporter:
+  externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - suitClub: {instanceID: 0}
+  - suitDiamond: {instanceID: 0}
+  - suitHeart: {instanceID: 0}
+  - suitSpade: {instanceID: 0}
+  - cardBack: {instanceID: 0}
+  - cardBackGold: {fileID: 21300000, guid: 8ecf4828943064b3a96f6258b54c0f11, type: 3}
+  - cardFront: {instanceID: 0}
+  - cardFrontGold: {fileID: 21300000, guid: 944dc539459fe4109b973bd4c97f68ee, type: 3}
+  - prefabSprite: {instanceID: 0}
+  - prefabCard: {instanceID: 0}
+  - deckAnchor: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

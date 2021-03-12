@@ -74,6 +74,12 @@ public class ScoreManager : MonoBehaviour
                 chain++; //Increase the score chain
                 scoreRun += chain; //Add score for this card to run
                 break;
+
+            case eScoreEvent.mineGold:
+                chain++; //Increase the chain
+                scoreRun += chain; //Add score chain
+                scoreRun *= 2; //doubles the value
+                break;
         }
 
         //This second switch statement handles round wins and losses
@@ -109,4 +115,5 @@ public class ScoreManager : MonoBehaviour
     static public int CHAIN { get { return S.chain; } }
     static public int SCORE { get { return S.score; } }
     static public int SCORE_RUN { get { return S.scoreRun; } }
+
 }

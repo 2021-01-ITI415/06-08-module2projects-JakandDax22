@@ -17,6 +17,7 @@ public class CardProspector : Card
 {
     //Make sure CardProspector extends Card
     [Header("Set Dynamically: CardProspector")]
+    public bool isGold = false;
     //This is how you use the enum eCardState
     public eCardState       state = eCardState.drawpile;
     //The hiddenby list stores which other cards will keep this one face down
