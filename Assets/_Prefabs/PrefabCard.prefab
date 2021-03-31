@@ -121,6 +121,7 @@ MonoBehaviour:
     rank: 0
     pips: []
   spriteRenderers: []
+  isGold: 0
   state: 0
   hiddenBy: []
   layoutID: 0
