@@ -384,8 +384,9 @@ public class Golf : MonoBehaviour {
         }
 
 		//If one is Ace and the other is King, they are adjacent
-		if (c0.rank == 1 && c1.rank == 13) return (true);
-		if (c0.rank == 13 && c1.rank == 1) return (true);
+		//But for this solitaire game, it is not needed since Ace and King won't wrap
+		//if (c0.rank == 1 && c1.rank == 13) return (true);
+		//if (c0.rank == 13 && c1.rank == 1) return (true);
 
 		//Otherwise, return false
 		return (false);

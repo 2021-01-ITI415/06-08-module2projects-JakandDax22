@@ -36,7 +36,7 @@ public class Deck : MonoBehaviour {
 	public Transform					deckAnchor;
 	public Dictionary<string, Sprite>	dictSuits;
 
-	
+
 
 	// called by Prospector when it is ready
 	public void InitDeck(string deckXMLText) {
